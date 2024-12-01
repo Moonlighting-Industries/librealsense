@@ -2101,6 +2101,21 @@ const char* rs2_record_device_filename(const rs2_device* device, rs2_error** err
 }
 HANDLE_EXCEPTIONS_AND_RETURN(nullptr, device)
 
+void rs2_record_device_write_header_double(const rs2_device* device, const char* key, double value, rs2_error** error) BEGIN_API_CALL
+{
+    VALIDATE_NOT_NULL(device);
+    auto record_device = VALIDATE_INTERFACE(device->device, librealsense::record_device);
+    record_device->write_custom_header(key, value);
+}
+HANDLE_EXCEPTIONS_AND_RETURN(, device)
+
+void rs2_record_device_write_header_uint32(const rs2_device* device, const char* key, uint32_t value, rs2_error** error) BEGIN_API_CALL
+{
+    VALIDATE_NOT_NULL(device);
+    auto record_device = VALIDATE_INTERFACE(device->device, librealsense::record_device);
+    record_device->write_custom_header(key, value);
+}
+HANDLE_EXCEPTIONS_AND_RETURN(, device)
 
 rs2_frame* rs2_allocate_synthetic_video_frame(rs2_source* source, const rs2_stream_profile* new_stream, rs2_frame* original,
     int new_bpp, int new_width, int new_height, int new_stride, rs2_extension frame_type, rs2_error** error) BEGIN_API_CALL

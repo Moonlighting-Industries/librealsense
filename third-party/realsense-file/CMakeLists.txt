@@ -27,6 +27,8 @@ add_library(${PROJECT_NAME} STATIC
     ${SOURCE_FILES_COMPRESSION}
 )
 
+target_compile_options(${PROJECT_NAME} PRIVATE -fvisibility=hidden)
+
 target_include_directories(${PROJECT_NAME} PRIVATE
         ${ROSBAG_HEADER_DIRS}
         ${LZ4_INCLUDE_PATH}

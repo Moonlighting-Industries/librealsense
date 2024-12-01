@@ -71,6 +71,9 @@ void rs2_record_device_resume(const rs2_device* device, rs2_error** error);
 */
 const char* rs2_record_device_filename(const rs2_device* device, rs2_error** error);
 
+void rs2_record_device_write_header_double(const rs2_device* device, const char* key, double value, rs2_error** error);
+void rs2_record_device_write_header_uint32(const rs2_device* device, const char* key, uint32_t value, rs2_error** error);
+
 /**
 * Creates a playback device to play the content of the given file
 * \param[in]  file      Path to the file to play

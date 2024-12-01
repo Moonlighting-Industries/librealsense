@@ -48,6 +48,20 @@ namespace librealsense
         }
     }
 
+    void ros_writer::write_custom_header(const std::string& key, const double value)
+    {
+        std_msgs::Float64 msg;
+        msg.data = value;
+        write_message(key, get_static_file_info_timestamp(), msg);
+    }
+
+    void ros_writer::write_custom_header(const std::string& key, const uint32_t value)
+    {
+        std_msgs::UInt32 msg;
+        msg.data = value;
+        write_message(key, get_static_file_info_timestamp(), msg);
+    }
+
     void ros_writer::write_frame(const stream_identifier& stream_id, const nanoseconds& timestamp, frame_holder&& frame)
     {
         if (Is<video_frame>(frame.frame))
@@ -173,7 +187,7 @@ namespace librealsense
         }
     }
 
-    void ros_writer::write_video_frame(const stream_identifier& stream_id, const nanoseconds& timestamp, frame_holder&& frame)
+    void ros_writer::write_video_frame(const stream_identifier& stream_id, const nanoseconds& timestamp, frame_holder&& frame, bool write_metadata)
     {
         sensor_msgs::Image image;
         auto vid_frame = dynamic_cast<librealsense::video_frame*>(frame.frame);
@@ -197,10 +211,13 @@ namespace librealsense
             image.depth_units = df->get_units();
         auto image_topic = ros_topic::frame_data_topic(stream_id);
         write_message(image_topic, timestamp, image);
-        write_additional_frame_messages(stream_id, timestamp, frame);
+        if (write_metadata)
+        {
+            write_additional_frame_messages(stream_id, timestamp, frame);
+        }
     }
 
-    void ros_writer::write_motion_frame(const stream_identifier& stream_id, const nanoseconds& timestamp, frame_holder&& frame)
+    void ros_writer::write_motion_frame(const stream_identifier& stream_id, const nanoseconds& timestamp, frame_holder&& frame, bool write_metadata)
     {
         sensor_msgs::Imu imu_msg;
         if (!frame)
@@ -233,7 +250,9 @@ namespace librealsense
 
         auto topic = ros_topic::frame_data_topic(stream_id);
         write_message(topic, timestamp, imu_msg);
-        write_additional_frame_messages(stream_id, timestamp, frame);
+        if (write_metadata) {
+            write_additional_frame_messages(stream_id, timestamp, frame);
+        }
     }
 
     inline geometry_msgs::Vector3 ros_writer::to_vector3(const float3& f)
@@ -255,7 +274,7 @@ namespace librealsense
         return q;
     }
 
-    void ros_writer::write_pose_frame(const stream_identifier& stream_id, const nanoseconds& timestamp, frame_holder&& frame)
+    void ros_writer::write_pose_frame(const stream_identifier& stream_id, const nanoseconds& timestamp, frame_holder&& frame, bool write_metadata)
     {
         auto pose = As<librealsense::pose_frame>(frame.frame);
         if (!frame)
@@ -310,7 +329,9 @@ namespace librealsense
         write_message(md_topic, timestamp, frame_num_msg);
 
         // Write the rest of the frame metadata and stream extrinsics
-        write_additional_frame_messages(stream_id, timestamp, frame);
+        if (write_metadata) {
+            write_additional_frame_messages(stream_id, timestamp, frame);
+        }
     }
 
     void ros_writer::write_stream_info(nanoseconds timestamp, const sensor_identifier& sensor_id, std::shared_ptr<stream_profile_interface> profile)

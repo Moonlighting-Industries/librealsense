@@ -331,6 +331,8 @@ namespace librealsense
         {
         public:
             virtual void write_device_description(const device_snapshot& device_description) = 0;
+            virtual void write_custom_header(const std::string& key, double value) = 0;
+            virtual void write_custom_header(const std::string& key, uint32_t value) = 0;
             virtual void write_frame(const stream_identifier& stream_id, const nanoseconds& timestamp, frame_holder&& frame) = 0;
             virtual void write_snapshot(uint32_t device_index, const nanoseconds& timestamp, rs2_extension type, const std::shared_ptr<extension_snapshot>& snapshot) = 0;
             virtual void write_snapshot(const sensor_identifier& sensor_id, const nanoseconds& timestamp, rs2_extension type, const std::shared_ptr<extension_snapshot>& snapshot) = 0;

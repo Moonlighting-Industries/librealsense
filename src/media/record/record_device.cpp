@@ -107,6 +107,30 @@ void librealsense::record_device::write_header()
     m_ros_writer->write_device_description({ device_extensions_md, sensors_snapshot, {/*extrinsics are written by ros_writer*/} });
 }
 
+void librealsense::record_device::write_custom_header(const std::string &key, const double value) {
+    auto capture_time = get_capture_time();
+    (*m_write_thread)->invoke([this, key, value](dispatcher::cancellable_timer t) {
+        try {
+            m_ros_writer->write_custom_header(key, value);
+        }
+        catch (const std::exception &e) {
+            LOG_ERROR(e.what());
+        }
+    });
+}
+
+void librealsense::record_device::write_custom_header(const std::string &key, const uint32_t value) {
+    auto capture_time = get_capture_time();
+    (*m_write_thread)->invoke([this, key, value](dispatcher::cancellable_timer t) {
+        try {
+            m_ros_writer->write_custom_header(key, value);
+        }
+        catch (const std::exception &e) {
+            LOG_ERROR(e.what());
+        }
+    });
+}
+
 //Returns the time relative to beginning of the recording
 std::chrono::nanoseconds librealsense::record_device::get_capture_time() const
 {
@@ -259,6 +283,8 @@ device_serializer::snapshot_collection librealsense::record_device::get_extensio
     }
     return snapshots;
 }
+template librealsense::device_serializer::snapshot_collection librealsense::record_device::get_extensions_snapshots<librealsense::device_interface>(librealsense::device_interface*);
+template librealsense::device_serializer::snapshot_collection librealsense::record_device::get_extensions_snapshots<librealsense::sensor_interface>(librealsense::sensor_interface*);
 
 template <typename T>
 void librealsense::record_device::write_device_extension_changes(const T& ext)

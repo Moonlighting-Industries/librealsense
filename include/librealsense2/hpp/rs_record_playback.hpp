@@ -266,6 +266,20 @@ namespace rs2
             error::handle(e);
             return filename;
         }
+
+        void write_header(const std::string& key, const double value)
+        {
+            rs2_error* e = nullptr;
+            rs2_record_device_write_header_double(_dev.get(), key.c_str(), value, &e);
+            error::handle(e);
+        }
+
+        void write_header(const std::string& key, const uint32_t value)
+        {
+            rs2_error* e = nullptr;
+            rs2_record_device_write_header_uint32(_dev.get(), key.c_str(), value, &e);
+            error::handle(e);
+        }
     protected:
         explicit recorder(std::shared_ptr<rs2_device> dev) : device(dev)
         {

@@ -50,6 +50,11 @@ namespace librealsense
         bool compress_while_record() const override { return true; }
         bool contradicts(const stream_profile_interface* a, const std::vector<stream_profile>& others) const override { return m_device->contradicts(a, others); }
 
+        template <typename T> static device_serializer::snapshot_collection get_extensions_snapshots(T* extendable);
+
+        void write_custom_header(const std::string& key, double value);
+        void write_custom_header(const std::string& key, uint32_t value);
+
     private:
         template <typename T> void write_device_extension_changes(const T& ext);
         template <rs2_extension E, typename P> bool extend_to_aux(std::shared_ptr<P> p, void** ext);
@@ -60,8 +65,7 @@ namespace librealsense
         void write_sensor_extension_snapshot(size_t sensor_index, rs2_extension ext, std::shared_ptr<extension_snapshot> snapshot, std::function<void(std::string const&)> on_error);
         void write_notification(size_t sensor_index, const notification& n);
         std::vector<std::shared_ptr<record_sensor>> create_record_sensors(std::shared_ptr<device_interface> m_device);
-        template <typename T> device_serializer::snapshot_collection get_extensions_snapshots(T* extendable);
-        template <typename T, typename Ext> void try_add_snapshot(T* extendable, device_serializer::snapshot_collection& snapshots);
+        template <typename T, typename Ext> static void try_add_snapshot(T* extendable, device_serializer::snapshot_collection& snapshots);
         std::shared_ptr<device_interface> m_device;
         std::vector<std::shared_ptr<record_sensor>> m_sensors;
 

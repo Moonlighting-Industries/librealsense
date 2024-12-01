@@ -12,6 +12,7 @@
 #include "std_msgs/UInt32.h"
 #include "std_msgs/Float32.h"
 #include "std_msgs/Float32MultiArray.h"
+#include "std_msgs/Float64.h"
 #include "std_msgs/String.h"
 #include "realsense_msgs/StreamInfo.h"
 #include "realsense_msgs/ImuIntrinsic.h"

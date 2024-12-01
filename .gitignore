@@ -11,6 +11,7 @@ doc/doxygen/html/
 # CMake
 build*/
 connectivity_check
+cmake-build-debug
 
 # XCode
 .DS_Store
