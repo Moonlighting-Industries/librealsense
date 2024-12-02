@@ -4,7 +4,6 @@
 #pragma once
 #include "rosbag/bag.h"
 #include "ros_file_format.h"
-#include "thread_pool.h"
 
 #include <rsutils/string/from.h>
 
